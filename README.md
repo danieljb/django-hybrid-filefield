@@ -6,7 +6,7 @@ A combination of Django's FileField and FilePathField.
 
 Using pip:
 
-pip install -e git+http://danieljb@github.com/danieljb/django-hybrid-filefield.git#egg=hybrid_filefield
+pip install -e git+http://github.com/danieljb/django-hybrid-filefield.git#egg=hybrid_filefield
 
 # Copyright #
 
