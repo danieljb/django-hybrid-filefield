@@ -95,8 +95,8 @@ class FileSelectOrUpload(models.FileField):
             else:
                 _new_file = self.move(file.name, os.path.realpath(os.path.join(settings.MEDIA_ROOT, self.upload_to)))
             file = self.storage.open(_new_file)
-        
-        return os.path.relpath(file.name, settings.MEDIA_ROOT)
+            return os.path.relpath(file.name, settings.MEDIA_ROOT)
+        return None
     
     def save_form_data(self, instance, data):
         if data is not None and not False: 

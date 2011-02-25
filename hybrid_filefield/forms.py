@@ -10,7 +10,8 @@ from django.forms.util import ErrorList
 from django.forms.fields import MultiValueField, FilePathField, FileField, CharField
 from django.utils.translation import ugettext as _
 
-from supreme_filefield.widgets import FileSelectOrUploadWidget
+from hybrid_filefield.widgets import FileSelectOrUploadWidget
+
 
 class FileSelectOrUploadField(MultiValueField):
     widget = FileSelectOrUploadWidget
@@ -55,6 +56,7 @@ class FileSelectOrUploadField(MultiValueField):
         )
         
         self.choices = [('', 'Use upload')] + fields[0].choices
+        self.widget.is_required = self.required
     
     def _get_choices(self):
         return self._choices

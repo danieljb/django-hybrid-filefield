@@ -2,7 +2,8 @@
 
 from django.conf import settings
 from django.forms.widgets import MultiWidget, Select
-from django.contrib.admin.widgets import AdminFileWidget, AdminTextareaWidget
+from django.contrib.admin.widgets import AdminFileWidget
+
 
 class FileSelectOrUploadWidget(MultiWidget):
     
@@ -24,6 +25,14 @@ class FileSelectOrUploadWidget(MultiWidget):
         self.widgets[0].choices = list(value)
     
     choices = property(_get_choices, _set_choices)
+    
+    def _get_required(self):
+        return self.widgets[1].is_required
+    
+    def _set_required(self, value):
+        self.widgets[1].is_required = value
+    
+    is_required = property(_get_required, _set_required)
     
     def value_from_datadict(self, data, files, name):
         return [widget.value_from_datadict(data, files, name + '_%s' % i) for i, widget in enumerate(self.widgets)]
