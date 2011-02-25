@@ -2,6 +2,12 @@
 
 A combination of Django's FileField and FilePathField.
 
+# Installation #
+
+Using pip:
+
+pip install -e git+http://danieljb@github.com/danieljb/django-hybrid-filefield.git#egg=hybrid_filefield
+
 # Copyright #
 
 Django Hybrid-FileField is distributed under GNU General Public License. 
