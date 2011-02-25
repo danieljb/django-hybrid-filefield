@@ -34,6 +34,24 @@ Usage of Hybrid-FileField in an image Model:
             ),
         )
 
+## Parameters ##
+
+#### FileSelectOrUpload.upload_to ####
+
+Path where files will be stored when uploaded via FileField or selected in the FilePathField.
+
+#### FileSelectOrUpload.path ####
+
+Path to search for files matching `FileSelectOrUpload.match`, matching files will be listed in FilePathField.
+
+#### FileSelectOrUpload.match ####
+
+Pattern defining which files will be listed in FilePathField.
+
+#### FileSelectOrUpload.copy_file ####
+
+If `True` file selected in FilePathField will be copied to `FileSelectOrUpload.upload_to` directory instead of being moved.
+
 # Copyright #
 
 Django Hybrid-FileField is distributed under GNU General Public License. 

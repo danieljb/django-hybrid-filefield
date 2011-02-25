@@ -60,9 +60,6 @@ class FileSelectOrUploadField(MultiValueField):
         return self._choices
 
     def _set_choices(self, value):
-        # Setting choices also sets the choices on the widget.
-        # choices can be any iterable, but we call list() on it because
-        # it will be consumed more than once.
         self._choices = self.widget.choices = list(value)
     
     choices = property(_get_choices, _set_choices)

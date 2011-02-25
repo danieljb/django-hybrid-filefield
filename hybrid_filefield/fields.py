@@ -9,7 +9,6 @@ from django.utils.translation import ugettext as _
 from hybrid_filefield.forms import FileSelectOrUploadField
 from hybrid_filefield.storage import FileSelectOrUploadStorage
 
-
 def init_dynamic_attrs(self, callables):
     
     self.callable_parameters = []
@@ -91,13 +90,13 @@ class FileSelectOrUpload(models.FileField):
         file = super(FileSelectOrUpload, self).pre_save(instance, add)
         
         if file:
-            if instance.copy_file:
+            if self.copy_file:
                 _new_file = self.copy(file.name, os.path.realpath(os.path.join(settings.MEDIA_ROOT, self.upload_to)))
             else:
                 _new_file = self.move(file.name, os.path.realpath(os.path.join(settings.MEDIA_ROOT, self.upload_to)))
             file = self.storage.open(_new_file)
         
-        return file.name
+        return os.path.relpath(file.name, settings.MEDIA_ROOT)
     
     def save_form_data(self, instance, data):
         if data is not None and not False: 
