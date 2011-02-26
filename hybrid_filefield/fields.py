@@ -9,6 +9,7 @@ from django.utils.translation import ugettext as _
 from hybrid_filefield.forms import FileSelectOrUploadField
 from hybrid_filefield.storage import FileSelectOrUploadStorage
 
+
 def init_dynamic_attrs(self, callables):
     
     self.callable_parameters = []
@@ -55,12 +56,6 @@ class FileSelectOrUpload(models.FileField):
             **kwargs
         )
     
-    def copy(self, file, new_path):
-        return self.storage.copy(file, new_path)
-    
-    def move(self, file, new_path):
-        return self.storage.move(file, new_path)
-    
     def contribute_to_class(self, cls, name):
         super(FileSelectOrUpload, self).contribute_to_class(cls, name)
         models.signals.post_init.connect(self._post_init, sender=cls)
@@ -86,21 +81,23 @@ class FileSelectOrUpload(models.FileField):
         
         return super(FileSelectOrUpload, self).formfield(**defaults)
     
+    
     def pre_save(self, instance, add):
-        file = super(FileSelectOrUpload, self).pre_save(instance, add)
+        file = getattr(instance, self.attname)
         
+        _path = os.path.abspath(os.path.realpath(os.path.join(settings.MEDIA_ROOT, self.upload_to)))
+                
         if file:
-            if self.copy_file:
-                _new_file = self.copy(file.name, os.path.realpath(os.path.join(settings.MEDIA_ROOT, self.upload_to)))
-            else:
-                _new_file = self.move(file.name, os.path.realpath(os.path.join(settings.MEDIA_ROOT, self.upload_to)))
-            file = self.storage.open(_new_file)
-            return os.path.relpath(file.name, settings.MEDIA_ROOT)
-        return None
+            if os.path.abspath(os.path.dirname(file.path)) != _path:
+                if self.copy_file:
+                    _new_file = self.storage.copy(file.name, _path)
+                else:
+                    _new_file = self.storage.move(file.name, _path)
+                return os.path.relpath(_new_file, settings.MEDIA_ROOT)
+        return file
     
     def save_form_data(self, instance, data):
-        if data is not None and not False: 
-            super(FileSelectOrUpload, self).save_form_data(instance, data)
+        super(FileSelectOrUpload, self).save_form_data(instance, data)
     
 
 try:
