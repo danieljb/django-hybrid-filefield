@@ -83,7 +83,7 @@ class FileSelectOrUploadField(MultiValueField):
                 if (self.required and not self.optional):
                     raise ValidationError(self.error_messages['required'])
             else:
-                field_value = os.path.normpath(field_value)
+                field_value = field_value
                 try:
                     clean_data.append(field.clean(field_value))
                 except ValidationError, e:
