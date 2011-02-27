@@ -5,6 +5,7 @@ import os
 from django.conf import settings
 from django.db import models
 from django.utils.translation import ugettext as _
+from django.db.models.fields.files import FieldFile
 
 from hybrid_filefield.forms import FileSelectOrUploadField
 from hybrid_filefield.storage import FileSelectOrUploadStorage
@@ -81,24 +82,30 @@ class FileSelectOrUpload(models.FileField):
         
         return super(FileSelectOrUpload, self).formfield(**defaults)
     
-    
-    def pre_save(self, instance, add):
-        file = getattr(instance, self.attname)
+    def to_python(self, value):
+        destination = os.path.normpath(os.path.join(settings.MEDIA_ROOT, self.upload_to))
         
-        _path = os.path.abspath(os.path.realpath(os.path.join(settings.MEDIA_ROOT, self.upload_to)))
-                
-        if file:
-            if os.path.abspath(os.path.dirname(file.path)) != _path:
+        if isinstance(value, FieldFile):
+            if value._committed and (os.path.dirname(value.path) != destination):
                 if self.copy_file:
-                    _new_file = self.storage.copy(file.name, _path)
+                    value = self.storage.copy(value.name, destination)
                 else:
-                    _new_file = self.storage.move(file.name, _path)
-                return os.path.relpath(_new_file, settings.MEDIA_ROOT)
-        return file
+                    value = self.storage.move(value.name, destination)
+        return value
     
+    def get_prep_value(self, value):
+        if value and isinstance(value, FieldFile):
+            return os.path.relpath(os.path.normpath(value.path), settings.MEDIA_ROOT)
+        return super(FileSelectOrUpload, self).get_prep_value(value)
+    """
     def save_form_data(self, instance, data):
+        logger.debug("Save form data:")
+        #if data:
+        #    logger.debug("Save Form Data: %s, path? %s" % (data, os.path.relpath(data, settings.MEDIA_ROOT)))
+        #if data:
+        #    data = os.path.relpath(data, settings.MEDIA_ROOT)
         super(FileSelectOrUpload, self).save_form_data(instance, data)
-    
+    """
 
 try:
     from south.modelsinspector import add_introspection_rules
