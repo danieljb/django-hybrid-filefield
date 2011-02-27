@@ -97,15 +97,7 @@ class FileSelectOrUpload(models.FileField):
         if value and isinstance(value, FieldFile):
             return os.path.relpath(os.path.normpath(value.path), settings.MEDIA_ROOT)
         return super(FileSelectOrUpload, self).get_prep_value(value)
-    """
-    def save_form_data(self, instance, data):
-        logger.debug("Save form data:")
-        #if data:
-        #    logger.debug("Save Form Data: %s, path? %s" % (data, os.path.relpath(data, settings.MEDIA_ROOT)))
-        #if data:
-        #    data = os.path.relpath(data, settings.MEDIA_ROOT)
-        super(FileSelectOrUpload, self).save_form_data(instance, data)
-    """
+    
 
 try:
     from south.modelsinspector import add_introspection_rules
