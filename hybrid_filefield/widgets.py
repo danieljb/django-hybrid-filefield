@@ -34,8 +34,8 @@ class FileSelectOrUploadWidget(MultiWidget):
     
     is_required = property(_get_required, _set_required)
     
-    def value_from_datadict(self, data, files, name):
-        return [widget.value_from_datadict(data, files, name + '_%s' % i) for i, widget in enumerate(self.widgets)]
+    # def value_from_datadict(self, data, files, name):
+    #     return [widget.value_from_datadict(data, files, name + '_%s' % i) for i, widget in enumerate(self.widgets)]
     
     def decompress(self, value):
         if value:
